@@ -6,6 +6,7 @@
   <title>Happy Kid Hub</title>
   <link rel="stylesheet" href="assets/css/site.css">
   <script defer src="assets/js/main.js"></script>
+<script defer src="assets/js/reading.js"></script>
 </head>
 <body>
   <header class="topbar">
@@ -19,25 +20,21 @@
     <div class="joke" id="jokeBox" aria-live="polite" title="Kid-friendly joke"></div>
   </header>
   <main class="wrap">
-    <section class="card hero">
-      <h2>Welcome!</h2>
-      <p>Pick an activity. Your progress is saved automatically.</p>
-      <ul class="badges" id="badgeList" aria-label="Badges earned"></ul>
-    </section>
+    <section class="card">
+      <h2>Reading Log</h2>
+      <form id="bookForm" class="book-form" autocomplete="off">
+        <input id="bookTitle" class="input" placeholder="Book title" required aria-label="Book title">
+        <select id="bookStars" class="input" aria-label="How much did you like it?">
+          <option value="5">★★★★★ Loved it</option>
+          <option value="4">★★★★☆ Great</option>
+          <option value="3">★★★☆☆ Good</option>
+          <option value="2">★★☆☆☆ Okay</option>
+          <option value="1">★☆☆☆☆ Not for me</option>
+        </select>
+        <button class="btn" type="submit">Add</button>
+      </form>
 
-    <section class="grid2">
-      <a class="card link" href="word-search.html">
-        <h3>Word Search</h3>
-        <p>Find words about Dog Man, Sonic, Minecraft, cooking, and drawing.</p>
-      </a>
-      <a class="card link" href="puzzles.html">
-        <h3>Puzzles</h3>
-        <p>Memory match and count to 27 game!</p>
-      </a>
-      <a class="card link" href="reading.html">
-        <h3>Reading Log</h3>
-        <p>Track books you read and earn badges.</p>
-      </a>
+      <ul id="bookList" class="book-list"></ul>
     </section>
   </main>
   <footer class="footer">

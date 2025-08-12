@@ -1,6 +1,45 @@
 ﻿// --- UTIL ---
 const qs = s => document.querySelector(s);
 const qsa = s => [...document.querySelectorAll(s)];
+// --- SFX (offline, synthesized) ---
+const AudioCtx = window.AudioContext || window.webkitAudioContext;
+let actx; const ensureCtx = () => actx || (actx = new AudioCtx());
+
+function tone({ freq = 440, dur = 0.2, type = 'sine', vol = 0.4, sweep = 0 }) {
+    if (!state.sound) return;
+    ensureCtx();
+    const t0 = actx.currentTime;
+    const o = actx.createOscillator();
+    const g = actx.createGain();
+    o.type = type;
+    o.frequency.setValueAtTime(freq, t0);
+    if (sweep) o.frequency.exponentialRampToValueAtTime(Math.max(40, freq * sweep), t0 + dur);
+    g.gain.setValueAtTime(0, t0);
+    g.gain.linearRampToValueAtTime(vol, t0 + 0.01);
+    g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+    o.connect(g).connect(actx.destination);
+    o.start(t0); o.stop(t0 + dur);
+}
+
+// Cute sounds
+const sfx = {
+    correct() { // little chime: C5 → E5
+        tone({ freq: 523.25, dur: 0.15, type: 'sine', vol: 0.35 });
+        setTimeout(() => tone({ freq: 659.25, dur: 0.18, type: 'sine', vol: 0.35 }), 120);
+    },
+    wrong() {  // “boing” down-sweep
+        tone({ freq: 300, dur: 0.28, type: 'triangle', vol: 0.35, sweep: 0.35 });
+    },
+    click() {  // soft pop
+        tone({ freq: 700, dur: 0.06, type: 'square', vol: 0.25, sweep: 1.6 });
+    },
+    success() { // small fanfare
+        tone({ freq: 659.25, dur: 0.12, vol: 0.35 });
+        setTimeout(() => tone({ freq: 783.99, dur: 0.12, vol: 0.35 }), 110);
+        setTimeout(() => tone({ freq: 987.77, dur: 0.18, vol: 0.35 }), 220);
+    }
+};
+
 const speak = (txt) => {
     if (!state.voice) return;
     try {
@@ -9,7 +48,6 @@ const speak = (txt) => {
         speechSynthesis.cancel(); speechSynthesis.speak(u);
     } catch { }
 };
-const beep = (id) => { if (!state.sound) return; try { qs(id).currentTime = 0; qs(id).play(); } catch { } };
 const rand = (arr) => arr[Math.floor(Math.random() * arr.length)];
 const save = () => localStorage.setItem('pls', JSON.stringify(state));
 const load = () => { try { return JSON.parse(localStorage.getItem('pls')) || {} } catch { return {} } };

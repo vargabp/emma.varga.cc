@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Happy Kid Hub</title>
+  <link rel="stylesheet" href="assets/css/site.css">
+  <script defer src="assets/js/main.js"></script>
+<script defer src="assets/js/wordsearch.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <h1 class="logo">Happy Kid Hub <span class="age">6+</span></h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="word-search.html">Word Search</a>
+      <a href="puzzles.html">Puzzles</a>
+      <a href="reading.html">Reading</a>
+    </nav>
+    <div class="joke" id="jokeBox" aria-live="polite" title="Kid-friendly joke"></div>
+  </header>
+  <main class="wrap">
+    <section class="card">
+      <h2>Word Search</h2>
+      <div class="controls">
+        <label>Theme:
+          <select id="themeSelect">
+            <option value="dogman">Dog Man</option>
+            <option value="sonic">Sonic</option>
+            <option value="minecraft">Minecraft</option>
+            <option value="cooking">Cooking</option>
+            <option value="drawing">Drawing</option>
+          </select>
+        </label>
+        <label>Size:
+          <select id="sizeSelect">
+            <option>10</option>
+            <option selected>12</option>
+            <option>14</option>
+          </select>
+        </label>
+        <button class="btn" id="newWS">New puzzle</button>
+      </div>
+
+      <div class="ws">
+        <div id="wsGrid" class="ws-grid" role="grid" aria-label="Word search grid"></div>
+        <aside class="ws-side">
+          <h3>Find these words:</h3>
+          <ul id="wordList" class="ws-words"></ul>
+          <div class="progress" id="wsProgress">0 found</div>
+        </aside>
+      </div>
+      <div class="tip">Tip: Click the first and last letter of a word (in a straight line).</div>
+    </section>
+  </main>
+  <footer class="footer">
+    <button class="btn small" id="newJokeBtn" aria-label="Show another joke">New Joke</button>
+    <span class="note">Made for a 6‑year‑old fan of Dog Man, Sonic, Minecraft, cooking & drawing. No aliens here!</span>
+  </footer>
+</body>
+</html>

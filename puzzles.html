@@ -6,6 +6,8 @@
   <title>Happy Kid Hub</title>
   <link rel="stylesheet" href="assets/css/site.css">
   <script defer src="assets/js/main.js"></script>
+<script defer src="assets/js/memory.js"></script>
+<script defer src="assets/js/number27.js"></script>
 </head>
 <body>
   <header class="topbar">
@@ -19,25 +21,23 @@
     <div class="joke" id="jokeBox" aria-live="polite" title="Kid-friendly joke"></div>
   </header>
   <main class="wrap">
-    <section class="card hero">
-      <h2>Welcome!</h2>
-      <p>Pick an activity. Your progress is saved automatically.</p>
-      <ul class="badges" id="badgeList" aria-label="Badges earned"></ul>
+    <section class="card">
+      <h2>Memory Match</h2>
+      <div class="controls">
+        <button class="btn" id="resetMemory">New Game</button>
+        <span id="memoryStats" class="stat">Moves: 0 • Best: —</span>
+      </div>
+      <div id="memoryGrid" class="memory-grid" aria-label="Memory matching game" role="grid"></div>
     </section>
 
-    <section class="grid2">
-      <a class="card link" href="word-search.html">
-        <h3>Word Search</h3>
-        <p>Find words about Dog Man, Sonic, Minecraft, cooking, and drawing.</p>
-      </a>
-      <a class="card link" href="puzzles.html">
-        <h3>Puzzles</h3>
-        <p>Memory match and count to 27 game!</p>
-      </a>
-      <a class="card link" href="reading.html">
-        <h3>Reading Log</h3>
-        <p>Track books you read and earn badges.</p>
-      </a>
+    <section class="card">
+      <h2>Count to 27</h2>
+      <p>Tap numbers 1 → 27 as fast as you can!</p>
+      <div class="controls">
+        <button class="btn" id="start27">Start</button>
+        <span id="timer27" class="stat">Time: 0.0s • Best: —</span>
+      </div>
+      <div id="grid27" class="grid27" aria-label="Numbers 1 to 27 game" role="grid"></div>
     </section>
   </main>
   <footer class="footer">
