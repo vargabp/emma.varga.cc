@@ -1,0 +1,629 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Play & Learn</title>
+    <meta name="description" content="A fun, safe, offline play-and-learn site for young kids." />
+    <style>
+        :root {
+            --bg: #0f172a; /* slate-900 */
+            --card: #111827; /* gray-900  */
+            --accent: #22c55e; /* green-500 */
+            --accent-2: #38bdf8; /* sky-400   */
+            --text: #e5e7eb; /* gray-200  */
+            --muted: #94a3b8; /* slate-400 */
+            --danger: #ef4444; /* red-500   */
+            --yellow: #f59e0b; /* amber-500 */
+            --focus: 0 0 0 4px #000, 0 0 0 8px var(--accent);
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        html, body {
+            height: 100%
+        }
+
+        body {
+            margin: 0;
+            font-family: system-ui, -apple-system, Segoe UI, Roboto, "Noto Sans", Ubuntu, Cantarell, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+            background: radial-gradient(1200px 600px at 10% -10%, #1f2937, transparent 60%), radial-gradient(1000px 500px at 110% 10%, #0b3a2d, transparent 60%), var(--bg);
+            color: var(--text);
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 14px 16px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            backdrop-filter: blur(8px);
+            background: linear-gradient(180deg, rgba(15,23,42,.85), rgba(15,23,42,.45) 70%, transparent);
+            border-bottom: 1px solid rgba(148,163,184,.2);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px
+        }
+
+        .logo {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: grid;
+            place-items: center;
+            background: conic-gradient(from 210deg, var(--accent), var(--accent-2));
+            box-shadow: 0 8px 30px rgba(56,189,248,.3)
+        }
+
+            .logo span {
+                font-size: 26px
+            }
+
+        .title {
+            font-size: clamp(20px, 2.6vw, 28px);
+            font-weight: 800;
+            letter-spacing: .5px
+        }
+
+        .controls {
+            display: flex;
+            gap: 8px;
+            align-items: center
+        }
+
+        button, .btn {
+            border: 0;
+            background: var(--accent);
+            color: #052e16;
+            font-weight: 800;
+            font-size: clamp(16px, 2.2vw, 18px);
+            padding: 12px 16px;
+            border-radius: 14px;
+            cursor: pointer;
+            box-shadow: 0 8px 24px rgba(34,197,94,.3);
+            transition: .2s transform, .2s filter;
+        }
+
+            button:focus-visible {
+                outline: none;
+                box-shadow: var(--focus)
+            }
+
+            button:active {
+                transform: translateY(1px)
+            }
+
+        .ghost {
+            background: transparent;
+            color: var(--text);
+            border: 1px solid rgba(148,163,184,.25);
+            box-shadow: none
+        }
+
+        .danger {
+            background: var(--danger);
+            color: #fff;
+            box-shadow: 0 8px 24px rgba(239,68,68,.25)
+        }
+
+        main {
+            width: min(1200px, 96%);
+            margin: 12px auto 32px;
+            flex: 1;
+        }
+
+        /* Grid of big cards */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px,1fr));
+            gap: 16px
+        }
+
+        .card {
+            background: linear-gradient(180deg, rgba(17,24,39,.9), rgba(17,24,39,.7));
+            border: 1px solid rgba(148,163,184,.15);
+            border-radius: 22px;
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            min-height: 160px;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .card h2 {
+                margin: 0;
+                font-size: clamp(18px, 2.5vw, 22px)
+            }
+
+            .card p {
+                margin: 0;
+                color: var(--muted)
+            }
+
+            .card .big {
+                font-size: 42px;
+                line-height: 1
+            }
+
+            .card .cta {
+                margin-top: auto;
+                align-self: flex-start
+            }
+
+            .card::after {
+                content: "";
+                position: absolute;
+                inset: auto -30% -30% auto;
+                width: 160px;
+                height: 160px;
+                border-radius: 50%;
+                filter: blur(40px);
+                opacity: .35
+            }
+
+            .card.colors::after {
+                background: conic-gradient(var(--accent), var(--accent-2), var(--yellow), var(--danger), var(--accent))
+            }
+
+            .card.draw::after {
+                background: radial-gradient(circle at 30% 30%, var(--accent-2), transparent 60%), radial-gradient(circle at 70% 70%, var(--yellow), transparent 60%)
+            }
+
+            .card.alpha::after {
+                background: conic-gradient(#a78bfa, #f472b6, #60a5fa, #a78bfa)
+            }
+
+            .card.count::after {
+                background: conic-gradient(#f59e0b, #34d399, #22d3ee, #f59e0b)
+            }
+
+            .card.stickers::after {
+                background: conic-gradient(#fde047, #fca5a5, #86efac, #bfdbfe, #fde047)
+            }
+
+        /* Panels */
+        .panel {
+            display: none;
+            margin-top: 16px
+        }
+
+            .panel.active {
+                display: block
+            }
+
+            .panel .row {
+                display: flex;
+                gap: 12px;
+                flex-wrap: wrap;
+                align-items: center
+            }
+
+        .muted {
+            color: var(--muted);
+            font-size: 14px
+        }
+
+        .spacer {
+            height: 8px
+        }
+
+        /* Color Pop Game */
+        .swatch {
+            width: 84px;
+            height: 84px;
+            border-radius: 18px;
+            border: 3px solid rgba(0,0,0,.25);
+            box-shadow: inset 0 2px 8px rgba(0,0,0,.25);
+            cursor: pointer
+        }
+
+        .prompt {
+            font-size: 22px;
+            font-weight: 800
+        }
+
+        /* Draw */
+        .tools {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin: 8px 0
+        }
+
+        canvas {
+            background: #0b1220;
+            width: 100%;
+            height: 400px;
+            border-radius: 18px;
+            border: 1px solid rgba(148,163,184,.2)
+        }
+
+        input[type=range] {
+            width: 180px
+        }
+
+        /* Stickers */
+        .stickers {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap
+        }
+
+        .sticker {
+            font-size: 36px;
+            padding: 6px 10px;
+            background: #0b1220;
+            border: 1px solid rgba(148,163,184,.25);
+            border-radius: 12px;
+            cursor: grab
+        }
+
+        .stage {
+            background: #0b1220;
+            border: 1px dashed rgba(148,163,184,.35);
+            border-radius: 18px;
+            height: 360px;
+            position: relative;
+            overflow: hidden
+        }
+
+        .placed {
+            position: absolute;
+            cursor: grab
+        }
+
+        /* Alphabet */
+        .alpha-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(60px,1fr));
+            gap: 10px
+        }
+
+        .letter {
+            display: grid;
+            place-items: center;
+            font-weight: 900;
+            font-size: 28px;
+            background: #0b1220;
+            border: 1px solid rgba(148,163,184,.25);
+            border-radius: 14px;
+            padding: 12px;
+            cursor: pointer
+        }
+
+        /* Counting */
+        .count-wrap {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap
+        }
+
+        .card-num {
+            display: grid;
+            place-items: center;
+            width: 80px;
+            height: 80px;
+            background: #0b1220;
+            border: 1px solid rgba(148,163,184,.25);
+            border-radius: 16px;
+            font-size: 28px;
+            font-weight: 900
+        }
+
+        /* Footer */
+        footer {
+            padding: 16px;
+            text-align: center;
+            color: var(--muted);
+            font-size: 13px
+        }
+
+        /* Reduced motion toggle */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                transition: none !important;
+                animation: none !important
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="brand" aria-label="Site brand">
+            <div class="logo" aria-hidden="true"><span>🌈</span></div>
+            <div class="title">Play & Learn</div>
+        </div>
+        <div class="controls">
+            <button class="ghost" id="btn-home" aria-label="Go Home">Home</button>
+            <button class="ghost" id="btn-sound" aria-pressed="true" aria-label="Toggle sounds">🔊 Sound</button>
+            <button class="ghost" id="btn-voice" aria-pressed="false" aria-label="Toggle speaking">🗣️ Voice</button>
+            <button class="ghost" id="btn-grownups" aria-label="Grown-ups settings">🔒 Grown‑ups</button>
+        </div>
+    </header>
+
+    <main>
+        <!-- HOME GRID -->
+        <section id="home" class="grid" aria-label="Main menu">
+            <article class="card colors">
+                <div class="big" aria-hidden="true">🎨</div>
+                <h2>Color Pop</h2>
+                <p class="muted">Tap the color I say!</p>
+                <button class="cta" data-open="panel-colors">Play</button>
+            </article>
+
+            <article class="card draw">
+                <div class="big" aria-hidden="true">✏️</div>
+                <h2>Draw</h2>
+                <p class="muted">Make art with magic pen.</p>
+                <button class="cta" data-open="panel-draw">Open</button>
+            </article>
+
+            <article class="card alpha">
+                <div class="big" aria-hidden="true">🔤</div>
+                <h2>Alphabet</h2>
+                <p class="muted">Tap letters to hear them.</p>
+                <button class="cta" data-open="panel-alpha">Learn</button>
+            </article>
+
+            <article class="card count">
+                <div class="big" aria-hidden="true">🧮</div>
+                <h2>Counting</h2>
+                <p class="muted">Count cute things 1–10.</p>
+                <button class="cta" data-open="panel-count">Start</button>
+            </article>
+
+            <article class="card stickers">
+                <div class="big" aria-hidden="true">⭐</div>
+                <h2>Sticker Book</h2>
+                <p class="muted">Drag stickers onto the page.</p>
+                <button class="cta" data-open="panel-stickers">Play</button>
+            </article>
+        </section>
+
+        <!-- COLOR POP PANEL -->
+        <section id="panel-colors" class="panel" aria-label="Color Pop Game">
+            <div class="row" style="justify-content:space-between; align-items:center">
+                <div class="prompt" id="color-prompt">Tap the <strong>red</strong> one!</div>
+                <div class="muted">Score: <span id="color-score">0</span></div>
+            </div>
+            <div class="spacer"></div>
+            <div class="row" id="color-swatches" role="list"></div>
+            <div class="spacer"></div>
+            <button id="color-new">New Round</button>
+        </section>
+
+        <!-- DRAW PANEL -->
+        <section id="panel-draw" class="panel" aria-label="Drawing Pad">
+            <div class="tools">
+                <label>Size <input type="range" id="brush" min="2" max="40" value="14" aria-label="Brush size" /></label>
+                <button class="ghost" data-color="#ffffff">White</button>
+                <button class="ghost" data-color="#22c55e">Green</button>
+                <button class="ghost" data-color="#38bdf8">Blue</button>
+                <button class="ghost" data-color="#f59e0b">Yellow</button>
+                <button class="ghost" data-color="#ef4444">Red</button>
+                <button class="danger" id="clear">Clear</button>
+                <button id="save-png">Save PNG</button>
+            </div>
+            <canvas id="pad" width="1200" height="600" aria-label="Drawing canvas"></canvas>
+        </section>
+
+        <!-- ALPHABET PANEL -->
+        <section id="panel-alpha" class="panel" aria-label="Alphabet">
+            <div class="muted">Tap a letter to hear it.</div>
+            <div class="spacer"></div>
+            <div class="alpha-grid" id="alpha-grid"></div>
+        </section>
+
+        <!-- COUNTING PANEL -->
+        <section id="panel-count" class="panel" aria-label="Counting Game">
+            <div class="row" style="justify-content:space-between; align-items:center">
+                <div class="prompt">How many <span id="count-thing">🍎</span>?</div>
+                <div class="muted">Score: <span id="count-score">0</span></div>
+            </div>
+            <div class="spacer"></div>
+            <div class="count-wrap" id="count-wrap"></div>
+            <div class="spacer"></div>
+            <div class="row" id="count-options"></div>
+            <div class="spacer"></div>
+            <button id="count-new">New Question</button>
+        </section>
+
+        <!-- STICKERS PANEL -->
+        <section id="panel-stickers" class="panel" aria-label="Sticker Book">
+            <div class="stickers" id="stickers"></div>
+            <div class="spacer"></div>
+            <div class="stage" id="stage" aria-label="Sticker stage"></div>
+            <div class="spacer"></div>
+            <button id="stickers-clear" class="danger">Clear Page</button>
+        </section>
+
+        <!-- GROWN-UPS MODAL (simple lock) -->
+        <dialog id="grownups">
+            <form method="dialog" style="min-width: min(520px, 96vw); background:var(--card); border:1px solid rgba(148,163,184,.25); border-radius:16px; padding:16px">
+                <h3 style="margin:0 0 12px">Grown‑ups</h3>
+                <p class="muted">Press <strong>1‑2‑3</strong> on your keyboard to unlock options.</p>
+                <div class="spacer"></div>
+                <div id="settings" style="display:none">
+                    <label class="row"><input type="checkbox" id="opt-voice" /> Enable speech (Web Speech API)</label>
+                    <label class="row"><input type="checkbox" id="opt-sound" checked /> Enable simple sounds</label>
+                    <button class="ghost" id="reset-progress" type="button">Reset scores</button>
+                </div>
+                <div class="spacer"></div>
+                <div class="row" style="justify-content:flex-end">
+                    <button class="ghost">Close</button>
+                </div>
+            </form>
+        </dialog>
+    </main>
+
+    <footer>
+        Works fully offline. No ads. No tracking. — © You
+    </footer>
+
+    <audio id="snd-correct" preload="auto">
+        <source src="data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAESsAACJWAAACABYAAAAAAABfAAAA" type="audio/wav">
+    </audio>
+    <audio id="snd-wrong" preload="auto">
+        <source src="data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAESsAACJWAAACABYAAAAAAABfAAAA" type="audio/wav">
+    </audio>
+
+    <script>
+    // --- UTIL ---
+    const qs = s => document.querySelector(s);
+    const qsa = s => [...document.querySelectorAll(s)];
+    const speak = (txt) => {
+      if(!state.voice) return;
+      try{ const u = new SpeechSynthesisUtterance(txt); u.rate = 1; u.pitch = 1.1; speechSynthesis.cancel(); speechSynthesis.speak(u);}catch{ }
+    };
+    const beep = (id) => { if(!state.sound) return; try{ qs(id).currentTime=0; qs(id).play(); }catch{} };
+    const rand = (arr) => arr[Math.floor(Math.random()*arr.length)];
+    const save = () => localStorage.setItem('pls', JSON.stringify(state));
+    const load = () => { try{ return JSON.parse(localStorage.getItem('pls')) || {} } catch { return {} } };
+
+    const state = Object.assign({
+      sound:true,
+      voice:false,
+      colorScore:0,
+      countScore:0
+    }, load());
+
+    // --- NAV ---
+    function openPanel(id){
+      qsa('.panel').forEach(p=>p.classList.remove('active'));
+      if(id){ qs('#home').style.display='none'; qs('#'+id).classList.add('active'); }
+      else{ qs('#home').style.display='grid'; }
+      window.scrollTo({top:0, behavior:'smooth'});
+    }
+
+    qs('#btn-home').addEventListener('click', ()=> openPanel(null));
+    qsa('[data-open]').forEach(b=> b.addEventListener('click',()=> openPanel(b.dataset.open)));
+
+    // --- SETTINGS ---
+    const dlg = qs('#grownups');
+    qs('#btn-grownups').addEventListener('click', ()=> dlg.showModal());
+    let seq = [];
+    dlg.addEventListener('keydown', (e)=>{
+      if(['1','2','3'].includes(e.key)){ seq.push(e.key); if(seq.join('')==='123'){ qs('#settings').style.display='block'; } }
+    });
+    dlg.addEventListener('close', ()=>{ seq=[]; qs('#settings').style.display='none'; });
+
+    qs('#opt-voice').checked = !!state.voice;
+    qs('#opt-sound').checked = !!state.sound;
+    qs('#opt-voice').addEventListener('change', e=>{ state.voice = e.target.checked; save(); });
+    qs('#opt-sound').addEventListener('change', e=>{ state.sound = e.target.checked; save(); });
+    qs('#reset-progress').addEventListener('click', ()=>{ state.colorScore=0; state.countScore=0; save(); updateScores(); alert('Scores reset'); });
+
+    qs('#btn-sound').setAttribute('aria-pressed', state.sound);
+    qs('#btn-voice').setAttribute('aria-pressed', state.voice);
+    qs('#btn-sound').addEventListener('click', ()=>{ state.sound=!state.sound; save(); qs('#btn-sound').setAttribute('aria-pressed', state.sound);});
+    qs('#btn-voice').addEventListener('click', ()=>{ state.voice=!state.voice; save(); qs('#btn-voice').setAttribute('aria-pressed', state.voice);});
+
+    // --- COLOR POP ---
+    const COLORS = [
+      {name:'red',hex:'#ef4444'},{name:'orange',hex:'#f59e0b'},{name:'yellow',hex:'#fde047'},{name:'green',hex:'#22c55e'},{name:'blue',hex:'#38bdf8'},{name:'purple',hex:'#a78bfa'},{name:'pink',hex:'#f472b6'}
+    ];
+    let targetColor = null;
+    function newColorRound(){
+      const pool = [...COLORS].sort(()=>Math.random()-0.5).slice(0,4);
+      targetColor = rand(pool);
+      qs('#color-prompt').innerHTML = `Tap the <strong style="color:${targetColor.hex}">${targetColor.name}</strong> one!`;
+      const wrap = qs('#color-swatches'); wrap.innerHTML='';
+      pool.sort(()=>Math.random()-0.5).forEach(c=>{
+        const div = document.createElement('button');
+        div.className='swatch'; div.style.background=c.hex; div.setAttribute('aria-label', c.name);
+        div.addEventListener('click', ()=>{
+          if(c.name===targetColor.name){ state.colorScore++; updateScores(); speak('Great job!'); beep('#snd-correct'); newColorRound(); }
+          else{ beep('#snd-wrong'); speak('Try again'); }
+        });
+        wrap.appendChild(div);
+      });
+      save();
+    }
+    qs('#color-new').addEventListener('click', newColorRound);
+
+    // --- DRAW ---
+    const pad = qs('#pad');
+    const ctx = pad.getContext('2d');
+    let drawing=false, last=[0,0], color='#ffffff';
+    function pos(e){ const r=pad.getBoundingClientRect(); const x=(e.touches?e.touches[0].clientX:e.clientX)-r.left; const y=(e.touches?e.touches[0].clientY:e.clientY)-r.top; return [x*pad.width/r.width, y*pad.height/r.height]; }
+    function drawto(x,y){ ctx.lineCap='round'; ctx.lineJoin='round'; ctx.strokeStyle=color; ctx.lineWidth=+qs('#brush').value; ctx.beginPath(); ctx.moveTo(...last); ctx.lineTo(x,y); ctx.stroke(); last=[x,y]; }
+    pad.addEventListener('pointerdown', e=>{ drawing=true; last=pos(e); });
+    pad.addEventListener('pointermove', e=>{ if(drawing){ const [x,y]=pos(e); drawto(x,y);} });
+    window.addEventListener('pointerup', ()=> drawing=false);
+    qsa('[data-color]').forEach(b=> b.addEventListener('click', ()=>{ color=b.dataset.color; }));
+    qs('#clear').addEventListener('click', ()=>{ ctx.clearRect(0,0,pad.width,pad.height); });
+    qs('#save-png').addEventListener('click', ()=>{
+      const a=document.createElement('a'); a.download='drawing.png'; a.href=pad.toDataURL('image/png'); a.click();
+    });
+
+    // --- ALPHABET ---
+    const AG = qs('#alpha-grid');
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').forEach(ch=>{
+      const b=document.createElement('button'); b.className='letter'; b.textContent=ch; b.setAttribute('aria-label',`Letter ${ch}`);
+      b.addEventListener('click',()=>{ speak(ch); b.animate([{transform:'scale(1)'},{transform:'scale(1.1)'},{transform:'scale(1)'}],{duration:180}); });
+      AG.appendChild(b);
+    });
+
+    // --- COUNTING ---
+    const things = ['🍎','🫐','🍌','🍊','🍇','🍓','🥕','🍒','🧁','🍪'];
+    function newCount(){
+      const n = Math.floor(Math.random()*9)+1; // 1..9
+      const t = rand(things); qs('#count-thing').textContent=t;
+      // items
+      const wrap = qs('#count-wrap'); wrap.innerHTML='';
+      for(let i=0;i<n;i++){ const d=document.createElement('div'); d.className='card-num'; d.textContent=t; wrap.appendChild(d); }
+      // options
+      const opts = qs('#count-options'); opts.innerHTML='';
+      const answers = new Set([n]); while(answers.size<4){ answers.add(Math.max(1, Math.min(10, n + (Math.floor(Math.random()*5)-2)))); }
+      [...answers].sort(()=>Math.random()-0.5).forEach(num=>{
+        const b=document.createElement('button'); b.className='btn ghost'; b.textContent=num; b.setAttribute('aria-label',`${num}`);
+        b.addEventListener('click',()=>{
+          if(num===n){ state.countScore++; updateScores(); speak('Yes!'); beep('#snd-correct'); newCount(); }
+          else{ speak('Not quite'); beep('#snd-wrong'); b.animate([{transform:'translateX(0px)'},{transform:'translateX(-6px)'},{transform:'translateX(6px)'},{transform:'translateX(0px)'}],{duration:180}); }
+        });
+        opts.appendChild(b);
+      });
+      save();
+    }
+    qs('#count-new').addEventListener('click', newCount);
+
+    function updateScores(){ qs('#color-score').textContent = state.colorScore; qs('#count-score').textContent = state.countScore; }
+
+    // --- STICKERS ---
+    const stickerList = '⭐ 💫 🌈 🦄 🐼 🐶 🐱 🐵 🐸 🐯 🐰 🐻 🐥 🐳 🦖 🚗 ✈️ 🚀 🏀 ⚽ 🎈 🍕 🍦 🍰 🎵'.split(' ');
+    const ST = qs('#stickers'); const STAGE = qs('#stage');
+    function renderStickers(){ ST.innerHTML=''; stickerList.forEach(s=>{ const b=document.createElement('button'); b.className='sticker'; b.textContent=s; b.addEventListener('click',()=> addSticker(s, 40+Math.random()*260, 40+Math.random()*220)); ST.appendChild(b); }); }
+    function addSticker(char, x, y){ const d=document.createElement('div'); d.className='placed'; d.textContent=char; d.style.left=x+'px'; d.style.top=y+'px'; d.style.fontSize=(36+Math.random()*36)+'px';
+      let dragging=false, off=[0,0];
+      d.addEventListener('pointerdown', e=>{ dragging=true; off=[e.offsetX,e.offsetY]; d.setPointerCapture(e.pointerId); });
+      d.addEventListener('pointermove', e=>{ if(!dragging)return; const r=STAGE.getBoundingClientRect(); const nx=e.clientX-r.left-off[0]; const ny=e.clientY-r.top-off[1]; d.style.left=Math.max(0,Math.min(r.width-24,nx))+'px'; d.style.top=Math.max(0,Math.min(r.height-24,ny))+'px'; });
+      d.addEventListener('pointerup', ()=> dragging=false);
+      STAGE.appendChild(d);
+    }
+    qs('#stickers-clear').addEventListener('click', ()=> STAGE.innerHTML='');
+
+    function boot(){
+      updateScores();
+      newColorRound();
+      newCount();
+      renderStickers();
+      // Default panel: home
+      openPanel(null);
+    }
+    boot();
+    </script>
+</body>
+</html>
