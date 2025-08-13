@@ -22,7 +22,7 @@
     items.forEach((it, idx) => {
       const li = document.createElement('li');
       li.className='book';
-      li.innerHTML = `<span>${escapeHtml(it.title)} <span class="stars">{'★'.repeat(it.stars)}</span></span>
+        li.innerHTML = `<span>${escapeHtml(it.title)} <span class="stars">${'★'.repeat(it.stars)}</span></span>
                       <button class="del" data-idx="${idx}">Delete</button>`;
       list.appendChild(li);
     });
