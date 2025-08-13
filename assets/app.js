@@ -166,10 +166,56 @@ function addSticker(char, x, y) {
 qs('#stickers-clear').addEventListener('click', () => STAGE.innerHTML = '');
 
 // --- BOOT ---
+
+// --- JOKES (kid-safe via JokeAPI with blacklist) ---
+const JOKE_URL =
+    'https://v2.jokeapi.dev/joke/Any?blacklistFlags=nsfw,religious,political,racist,sexist,explicit&type=single,twopart';
+
+const FALLBACK_JOKES = [
+    "Why did the teddy bear say no to dessert? Because it was stuffed!",
+    "Why did the cookie go to the doctor? It felt crummy.",
+    "Why did the student eat his homework? The teacher said it was a piece of cake!",
+    "What do you call cheese that isn’t yours? Nacho cheese!",
+    "Why did the banana go to the nurse? It wasn’t peeling well.",
+    "Why did the math book look sad? Too many problems.",
+    "What do you call a sleeping bull? A bulldozer!"
+];
+
+async function loadJoke() {
+    const el = qs('#joke-text');
+    try {
+        const res = await fetch(JOKE_URL, { cache: 'no-store' });
+        const j = await res.json();
+
+        let text;
+        if (j.type === 'single') {
+            text = j.joke;
+            el.textContent = text;
+            if (state.voice) speak(text);
+        } else {
+            text = `${j.setup} — ${j.delivery}`;
+            el.textContent = text;
+            if (state.voice) {
+                speak(j.setup);
+                setTimeout(() => speak(j.delivery), 900);
+            }
+        }
+    } catch {
+        const joke = rand(FALLBACK_JOKES);
+        el.textContent = joke;
+        if (state.voice) speak(joke);
+    }
+}
+
+// button
+qs('#joke-new')?.addEventListener('click', () => { sfx?.click?.(); loadJoke(); });
+
+
 (function boot() {
     updateScores();
     newColorRound();
     newCount();
     renderStickers();
     openPanel(null);
+    loadJoke();
 })();
